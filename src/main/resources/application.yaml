@@ -1,0 +1,72 @@
+server:
+  port: 8080
+  max-http-request-header-size: 64KB
+
+spring:
+  application:
+    name: diffvera
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:../../.env[.properties]
+
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/diffvera}
+    username: ${SPRING_DATASOURCE_USERNAME:diffvera}
+    password: ${SPRING_DATASOURCE_PASSWORD:diffvera_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: ${HIBERNATE_FORMAT_SQL:false}
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+diffvera:
+  jwt:
+    secret: ${DIFFVERA_JWT_SECRET:diffvera-super-secret-jwt-key-minimum-256-bits-length-for-hmac-sha!}
+    expiration-seconds: ${DIFFVERA_JWT_EXPIRATION:604800}
+    cookie-name: diffvera_session
+    cookie-secure: ${DIFFVERA_COOKIE_SECURE:false}
+    cookie-same-site: ${DIFFVERA_COOKIE_SAME_SITE:Lax}
+  cors:
+    allowed-origins: ${DIFFVERA_CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  security:
+    require-auth: ${DIFFVERA_REQUIRE_AUTH:false}
+  frontend:
+    dashboard-url: ${DIFFVERA_FRONTEND_DASHBOARD_URL:http://localhost:3000/dashboard}
+  github:
+    client-id: ${GITHUB_CLIENT_ID:}
+    client-secret: ${GITHUB_CLIENT_SECRET:}
+    redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/api/v1/auth/callback/github}
+    app-id: ${GITHUB_APP_ID:}
+    app-private-key: ${GITHUB_APP_PRIVATE_KEY:}
+    webhook-secret: ${GITHUB_WEBHOOK_SECRET:}
+  gemini:
+    api-key: ${GEMINI_API_KEY:}
+    model: ${GEMINI_MODEL:gemini-flash-latest}
