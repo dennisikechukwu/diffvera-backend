@@ -329,13 +329,16 @@ public class GeminiAiService {
 
         sb.append("### Review Guidelines\n");
         sb.append("1. Holistically evaluate the code against both the Active Architecture Boundary Rules and any specifications found in the Markdown documentation files (.md).\n");
-        sb.append("2. Strictly identify:\n");
+        sb.append("2. Deeply analyze code comments, docstrings, Javadoc, and inline annotations (e.g. //, /* */, #, Javadoc tags, TODO/FIXME markers):\n");
+        sb.append("   - Detect Code-Comment Drift: Identify cases where code comments state specific guarantees, invariants, or intended behavior (e.g. thread safety, null handling, transaction boundaries, performance expectations) that the implementation contradicts or neglects.\n");
+        sb.append("   - Audit Acknowledged Technical Debt: Flag comments explicitly acknowledging architectural compromises or temporary bypasses (e.g. 'hack to bypass service layer', 'TODO: fix race condition') that break boundary invariants.\n");
+        sb.append("3. Strictly identify:\n");
         sb.append("   - 'architecture': Violations of stated architecture boundary rules, discrepancies with documented architectural designs (ADRs/ARCHITECTURE.md), improper cross-layer coupling, leaky abstractions, or cyclic dependencies.\n");
         sb.append("   - 'security': OWASP vulnerabilities, injection flaws, unsafe deserialization, missing authorization, timing leaks, or insecure credentials.\n");
         sb.append("   - 'correctness': Logic bugs, race conditions, unhandled nil/null references, resource leaks, or broken contract invariants.\n");
-        sb.append("3. DO NOT comment on cosmetic styling, formatting, linting, or personal preferences.\n");
-        sb.append("4. Line numbers ('lineStart' and 'lineEnd') must be exact 1-based line numbers directly present in the diff.\n");
-        sb.append("5. Output MUST strictly follow this JSON schema:\n");
+        sb.append("4. DO NOT comment on cosmetic styling, formatting, linting, spelling, or personal preferences.\n");
+        sb.append("5. Line numbers ('lineStart' and 'lineEnd') must be exact 1-based line numbers directly present in the diff.\n");
+        sb.append("6. Output MUST strictly follow this JSON schema:\n");
         sb.append("{\n");
         sb.append("  \"findings\": [\n");
         sb.append("    {\n");
