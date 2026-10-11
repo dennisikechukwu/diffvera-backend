@@ -93,7 +93,10 @@ public class AuthController {
             String token = jwtService.generateToken(user);
             attachSessionCookie(response, token, expirationSeconds);
             log.info("GitHub authentication successful for user: {}", user.getLogin());
-            response.sendRedirect(frontendDashboardUrl);
+            String redirectUrl = frontendDashboardUrl.contains("?")
+                ? frontendDashboardUrl + "&token=" + token
+                : frontendDashboardUrl + "?token=" + token;
+            response.sendRedirect(redirectUrl);
         } catch (Exception e) {
             log.warn("GitHub callback error: {}", e.getMessage());
             response.sendRedirect(frontendDashboardUrl);
