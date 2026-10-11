@@ -73,7 +73,7 @@ class AuthControllerTest {
 
         mockMvc.perform(get("/api/v1/auth/callback/github").param("code", "github-code-123"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("http://localhost:3000/dashboard"))
+            .andExpect(redirectedUrlPattern("http://localhost:3000/dashboard?token=*"))
             .andExpect(cookie().exists("diffvera_session"))
             .andExpect(cookie().httpOnly("diffvera_session", true));
     }
